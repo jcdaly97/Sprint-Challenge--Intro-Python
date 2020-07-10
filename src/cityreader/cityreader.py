@@ -20,8 +20,8 @@ class City:
     self.city = city
     self.state_name = state_name
     self.county_name = county_name
-    self.lat = lat
-    self.lng = lng
+    self.lat = float(lat)
+    self.lng = float(lng)
     self.population = population
     self.density = density
     self.timezone = timezone
@@ -90,9 +90,46 @@ for c in cities:
 def cityreader_stretch(lat1, lon1, lat2, lon2, cities=[]):
   # within will hold the cities that fall within the specified region
   within = []
+  upperLat = None
+  lowerLat = None
+  upperLon = None
+  lowerLat = None
+
+  if lat1 > lat2:
+    upperLat = lat1
+    lowerLat = lat2
+  elif lat2 >= lat1:
+    upperLat = lat2
+    lowerLat = lat1
+  
+  if lon1 > lon2:
+    upperLon = lon1
+    lowerLon = lon2
+  elif lon2 >= lon1:
+    upperLon = lon2
+    lowerLon = lon1
+
+  within = [c for c in cities if upperLat >= c.lat >= lowerLat and upperLon >= c.lng >= lowerLon]
 
   # TODO Ensure that the lat and lon valuse are all floats
   # Go through each city and check to see if it falls within 
   # the specified coordinates.
 
   return within
+while True:
+  try:
+    latA, lonA = input("Enter the first set of coordinates (x,y): ").split(",")
+    latB, lonB = input("Enter the second set of coordinates (x,y): ").split(",")
+
+    latA = float(latA)
+    lonA = float(lonA)
+    latB = float(latB)
+    lonB = float(lonB)
+
+    result = []
+
+    result = cityreader_stretch(latA, lonA, latB, lonB, cities)
+  except: print("please enter valid coordinates")
+  else:
+    for c in result:
+      print(f"{c.city}: {c.lat}, {c.lng}")
